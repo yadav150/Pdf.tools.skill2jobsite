@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- BASIC META -->
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- TITLE & DESCRIPTION -->
+  <title>Merge PDF Files Online – Skill2Job</title>
+  <meta name="description" content="Merge multiple PDF files into a single PDF online instantly. Free, secure, and fast PDF merging tool by Skill2Job.">
+
+  <!-- KEYWORDS (SEO FRIENDLY) -->
+  <meta name="keywords" content="Merge PDF, Online PDF Merger, Free PDF Tools, PDF Join, Combine PDF Files, Skill2Job Tools">
+
+  <!-- OPEN GRAPH (SOCIAL SHARING) -->
+  <meta property="og:title" content="Merge PDF Files Online – Skill2Job">
+  <meta property="og:description" content="Merge multiple PDF files into a single PDF online instantly. Free, secure, and fast PDF merging tool.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.skill2job.site/merge-pdf">
+  <meta property="og:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+
+  <!-- TWITTER CARD -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Merge PDF Files Online – Skill2Job">
+  <meta name="twitter:description" content="Merge multiple PDF files into a single PDF online instantly. Free & secure tool by Skill2Job.">
+  <meta name="twitter:image" content="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp">
+
+  <!-- FONTS -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- FAVICON -->
+  <link rel="icon" href="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" type="image/webp">
+
+  <!-- PERFORMANCE -->
+  <meta name="robots" content="index, follow">
+</head>
+
+  <!-- FONT -->
+
+  <style>
+    :root{
+      --primary:#2563eb;
+      --dark:#1e293b;
+      --bg:#f8fafc;
+      --border:#e2e8f0;
+      --card:#ffffff;
+      --text:#334155;
+      --font-base:16px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      font-size:var(--font-base);
+      line-height:1.6;
+    }
+
+    header{
+      background:var(--card);
+      border-bottom:1px solid var(--border);
+      position:sticky;top:0;z-index:1000;
+    }
+    .header-container{
+      max-width:1100px;margin:auto;
+      padding:14px 16px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .logo img{height:36px}
+    .share-btn{
+      background:var(--primary);
+      color:#fff;border:none;
+      padding:8px 14px;
+      border-radius:6px;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    .tool-section{padding:40px 16px}
+    .tool-card{
+      max-width:800px;margin:auto;
+      background:var(--card);
+      padding:24px;
+      border-radius:10px;
+      box-shadow:0 8px 22px rgba(0,0,0,.05);
+    }
+    .tool-card h1{
+      text-align:center;
+      font-size:22px;
+      font-weight:600;
+      margin-bottom:20px;
+      color:var(--dark);
+    }
+
+    .input-group{margin-bottom:16px}
+    .input-group label{
+      display:block;
+      margin-bottom:6px;
+      font-size:16px;
+      font-weight:500;
+    }
+    .input-group input{
+      width:100%;
+      padding:10px;
+      font-size:16px;
+      border-radius:6px;
+      border:1px solid var(--border);
+    }
+
+    .calculate-btn{
+      width:100%;
+      padding:12px;
+      font-size:16px;
+      background:var(--primary);
+      color:#fff;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      font-weight:500;
+      margin-top:10px;
+    }
+
+    .pdf-list{
+      margin-top:16px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      padding:12px;
+    }
+
+    .pdf-item{
+      font-size:15px;
+      padding:6px 0;
+      border-bottom:1px dashed var(--border);
+    }
+    .pdf-item:last-child{border-bottom:none}
+
+    .add-more{
+      margin-top:12px;
+      text-align:center;
+      font-size:15px;
+      color:var(--primary);
+      cursor:pointer;
+      font-weight:500;
+    }
+
+    .loading{
+      display:none;
+      margin-top:20px;
+      text-align:center;
+    }
+    .spinner{
+      width:36px;height:36px;
+      border:4px solid #dbeafe;
+      border-top:4px solid var(--primary);
+      border-radius:50%;
+      margin:auto;
+      animation:spin .8s linear infinite;
+    }
+
+    .result{
+      display:none;
+      margin-top:20px;
+      padding:14px;
+      background:#eff6ff;
+      border-left:4px solid var(--primary);
+      border-radius:6px;
+      font-size:16px;
+      text-align:center;
+    }
+
+    footer{
+      background:var(--dark);
+      color:#cbd5f5;
+      text-align:center;
+      padding:14px;
+      font-size:14px;
+    }
+
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.tool-preview {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--card);
+  text-align: center;
+}
+
+.tool-preview h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.tool-preview p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #e5edff;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+    @keyframes spin{to{transform:rotate(360deg)}}
+  </style>
+
+  <!-- PDF LIB -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+    </div>
+    <button class="share-btn" id="shareBtn">Share</button>
+  </div>
+</header>
+
+<section class="tool-section">
+  <div class="tool-card">
+    <h1>Merge PDF Files</h1>
+
+    <div class="input-group">
+      <label>Upload PDF</label>
+      <input type="file" id="pdfInput" accept="application/pdf">
+    </div>
+
+    <div class="pdf-list" id="pdfList" style="display:none"></div>
+
+    <div class="add-more" id="addMore" style="display:none">
+      ➕ Add another PDF
+    </div>
+
+    <button class="calculate-btn" id="mergeBtn">
+      Merge PDFs & Download
+    </button>
+
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<section class="about">
+  <div class="about-card">
+    <h2>More Tools</h2>
+
+    <div class="tools-grid">
+      <div class="tool-preview">
+        <h3>BMI Calculator</h3>
+        <p>Check your body mass index easily.</p>
+        <span class="badge">Use Tool</span>
+      </div>
+
+      <div class="tool-preview">
+        <h3>Date Difference</h3>
+        <p>Find difference between two dates.</p>
+        <span class="badge">Use Tool</span>
+      </div>
+
+      <div class="tool-preview">
+        <h3>Percentage Calculator</h3>
+        <p>Calculate percentage instantly.</p>
+        <span class="badge">Use Tool</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer>Skill2Job Tools</footer>
+
+<script>
+const pdfInput = document.getElementById("pdfInput");
+const pdfList = document.getElementById("pdfList");
+const addMore = document.getElementById("addMore");
+const mergeBtn = document.getElementById("mergeBtn");
+const loading = document.getElementById("loading");
+const result = document.getElementById("result");
+
+let pdfFiles = [];
+
+pdfInput.addEventListener("change", async e => {
+  if(!e.target.files.length) return;
+
+  loading.style.display = "block";
+  result.style.display = "none";
+
+  const file = e.target.files[0];
+  const bytes = await file.arrayBuffer();
+  pdfFiles.push({ name:file.name, bytes });
+
+  setTimeout(()=>{
+    loading.style.display = "none";
+    renderList();
+  }, 600);
+});
+
+addMore.addEventListener("click",()=>{
+  pdfInput.click();
+});
+
+function renderList(){
+  pdfList.innerHTML = "";
+  pdfFiles.forEach((f,i)=>{
+    const div = document.createElement("div");
+    div.className = "pdf-item";
+    div.textContent = `${i+1}. ${f.name}`;
+    pdfList.appendChild(div);
+  });
+  pdfList.style.display = "block";
+  addMore.style.display = "block";
+}
+
+mergeBtn.addEventListener("click", async ()=>{
+  result.style.display = "none";
+
+  if(pdfFiles.length < 2){
+    result.textContent = "Please upload at least two PDFs to merge.";
+    result.style.display = "block";
+    result.scrollIntoView({behavior:"smooth",block:"center"});
+    return;
+  }
+
+  loading.style.display = "block";
+  mergeBtn.disabled = true;
+
+  try{
+    const mergedPdf = await PDFLib.PDFDocument.create();
+
+    for(const f of pdfFiles){
+      const pdf = await PDFLib.PDFDocument.load(f.bytes);
+      const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
+      pages.forEach(p=>mergedPdf.addPage(p));
+    }
+
+    const bytes = await mergedPdf.save();
+    const blob = new Blob([bytes],{type:"application/pdf"});
+    const url = URL.createObjectURL(blob);
+
+    result.innerHTML = `<a href="${url}" download="merged.pdf">Download Merged PDF</a>`;
+    result.style.display = "block";
+    result.scrollIntoView({behavior:"smooth",block:"center"});
+  }catch{
+    result.textContent = "Error merging PDFs. Please try again.";
+    result.style.display = "block";
+  }
+
+  loading.style.display = "none";
+  mergeBtn.disabled = false;
+});
+
+document.getElementById("shareBtn").addEventListener("click",()=>{
+  if(navigator.share){
+    navigator.share({
+      title:"Merge PDF Files – Skill2Job",
+      url:location.href
+    });
+  }
+});
+</script>
+
+</body>
+</html>
