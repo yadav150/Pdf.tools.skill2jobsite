@@ -218,6 +218,45 @@
   font-weight: 500;
 }
 
+    .about {
+      max-width: 800px;
+      margin: auto;
+      padding: 40px 16px;
+    }
+
+    .about-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 24px;
+    }
+
+    .about-card h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      color: var(--dark);
+    }
+
+    .about-text {
+      font-size: 15px;
+      text-align: justify;
+      line-height: 1.7;
+    }
+
+    .about-text a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      border-bottom: 1px dashed transparent;
+      transition: all 0.2s ease;
+    }
+
+    .about-text a:hover {
+      border-bottom-color: var(--primary);
+      opacity: 0.9;
+    }
+
     @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 
@@ -260,6 +299,22 @@
     </div>
 
     <div class="result" id="result"></div>
+  </div>
+</section>
+
+  <section class="about">
+  <div class="about-card">
+    <h2>About This Tool</h2>
+    <p class="about-text">
+      This Merge PDF tool allows you to combine multiple PDF files into a single
+      PDF document quickly and securely. The tool works entirely in your browser,
+      requires no registration, and does not store any of your files. Site
+      <a href="https://www.skill2job.site/" target="_blank" rel="noopener">
+        Skill2Job
+      </a>
+      is developed by <strong>Yadav Subba</strong> and offers free, fast, and reliable
+      online tools for students, job seekers, and professionals.
+    </p>
   </div>
 </section>
 
