@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- BASIC SEO -->
+  <meta charset="UTF-8">
+  <title>Skill2Job Tools – Free Online Calculators & PDF Tools</title>
+  <meta name="description" content="Skill2Job Tools provides free online calculators and PDF tools like Age Calculator, Merge PDF, Remove PDF and more. Fast, secure & easy.">
+  <meta name="keywords" content="Skill2Job Tools, Age Calculator, PDF Tools, Merge PDF, Remove PDF">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --primary:#2563eb;
+      --dark:#1e293b;
+      --bg:#f8fafc;
+      --border:#e2e8f0;
+      --card:#ffffff;
+      --text:#334155;
+      --font-base:16px;
+    }
+
+    *{margin:0;padding:0;box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Poppins',sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      font-size:var(--font-base);
+      line-height:1.6;
+    }
+
+    /* HEADER */
+    header{
+      background:var(--card);
+      border-bottom:1px solid var(--border);
+      position:sticky;top:0;z-index:1000;
+    }
+    .header-container{
+      max-width:1100px;margin:auto;
+      padding:14px 16px;
+      display:flex;justify-content:space-between;align-items:center;
+    }
+    .logo img{height:36px}
+    .share-btn{
+      background:var(--primary);
+      color:#fff;border:none;
+      padding:8px 14px;
+      border-radius:6px;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    /* HERO */
+    .hero{
+      padding:50px 16px;
+      text-align:center;
+    }
+    .hero h1{
+      font-size:26px;
+      font-weight:600;
+      color:var(--dark);
+      margin-bottom:10px;
+    }
+    .hero p{
+      font-size:16px;
+      max-width:700px;
+      margin:auto;
+    }
+
+    /* TOOLS GRID */
+    .tools-section{
+      padding:40px 16px;
+    }
+    .tools-container{
+      max-width:1100px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:16px;
+    }
+
+    .tool-card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:18px;
+      text-align:center;
+      transition:all .2s ease;
+    }
+    .tool-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 10px 24px rgba(0,0,0,.06);
+    }
+
+    .tool-card h3{
+      font-size:17px;
+      font-weight:600;
+      color:var(--dark);
+      margin-bottom:6px;
+    }
+    .tool-card p{
+      font-size:15px;
+      margin-bottom:12px;
+    }
+
+    .tool-card a{
+      display:inline-block;
+      padding:8px 14px;
+      font-size:14px;
+      font-weight:500;
+      background:var(--primary);
+      color:#fff;
+      border-radius:6px;
+      text-decoration:none;
+    }
+
+    /* FOOTER */
+    footer{
+      background:var(--dark);
+      color:#cbd5f5;
+      text-align:center;
+      padding:14px;
+      font-size:14px;
+    }
+    .about-section{
+  padding:40px 16px;
+}
+
+.about-container{
+  max-width:1100px;
+  margin:auto;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:24px;
+}
+
+.about-container h2{
+  font-size:18px;
+  font-weight:600;
+  color:var(--dark);
+  margin-bottom:10px;
+}
+
+.about-container p{
+  font-size:15px;
+  line-height:1.7;
+  text-align:justify;
+  margin-bottom:10px;
+}
+
+footer {
+  background: #111;
+  color: #bbb;
+  padding: 14px 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+footer a {
+  color: #bbb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+footer a:hover {
+  color: #ffffff;
+}
+
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-container">
+    <div class="logo">
+      <img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo">
+    </div>
+    <button class="share-btn" id="shareBtn">Share</button>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Skill2Job Online Tools</h1>
+  <p>
+  Free online calculators and PDF tools designed to simplify your tasks. 
+  Fast, secure, and completely no-sign-up required.
+</p>
+</section>
+
+<section class="tools-section">
+  <div class="tools-container">
+
+    <div class="tool-card">
+      <h3>Age Calculator</h3>
+      <p>Calculate your exact age in years, months and days.</p>
+      <a href="age-calculator.html">Use Tool</a>
+    </div>
+
+    <div class="tool-card">
+      <h3>Merge PDF</h3>
+      <p>Combine multiple PDF files into a single document.</p>
+      <a href="merge-pdf.html">Use Tool</a>
+    </div>
+
+    <div class="tool-card">
+      <h3>Remove PDF Pages</h3>
+      <p>Delete selected pages from your PDF easily.</p>
+      <a href="remove-pages-pdf.html">Use Tool</a>
+    </div>
+
+    <div class="tool-card">
+      <h3>Crop PDF</h3>
+      <p>Crop selected pages of PDF visually.</p>
+      <a href="#">Use Tool</a>
+    </div>
+
+  </div>
+</section>
+
+<section class="about-section">
+  <div class="about-container">
+    <h2>About Skill2Job Tools</h2>
+    <p>
+  Skill2Job Tools is a free online tools platform that offers fast, simple, and
+  reliable web-based utilities for everyday use. Our aim is to help users easily
+  perform tasks such as age calculation, PDF tools, and other essential online
+  utilities without requiring registration or storing personal data.
+</p>
+
+<p>
+  All tools run directly in your browser using modern web technologies, ensuring
+  privacy, security, and high performance. Skill2Job is developed and maintained
+  by <strong>Yadav Subba</strong>, primarily focusing on students, job seekers,
+  and professionals who need quick and trustworthy online tools.
+</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-wrap">
+    © 2026 Skill2Job Tools. All Rights Reserved.
+    <div class="footer-links">
+      <a href="#">About</a> |
+      <a href="#">Privacy</a> |
+      <a href="#">Contact</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById("shareBtn").addEventListener("click",()=>{
+  if(navigator.share){
+    navigator.share({
+      title:"Skill2Job Online Tools",
+      url:location.href
+    });
+  }
+});
+</script>
+
+</body>
+</html>
