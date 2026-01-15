@@ -206,6 +206,43 @@
       font-size: 14px;
     }
 
+    .tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.tool-preview {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  background: var(--card);
+  text-align: center;
+}
+
+.tool-preview h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--dark);
+  margin-bottom: 6px;
+}
+
+.tool-preview p {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+}
+
+.badge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #e5edff;
+  color: var(--primary);
+  font-weight: 500;
+}
+
     /* ANIMATION */
     @keyframes spin {
       to { transform: rotate(360deg); }
@@ -259,6 +296,47 @@
     </p>
   </div>
 </section>
+
+  <section class="about">
+  <div class="about-card">
+    <h2>More Tools</h2>
+
+    <div class="tools-grid">
+      <div class="tool-preview">
+        <h3>Age Calculator</h3>
+        <p>Calculate your exact age based on date of birth instantly.</p>
+        <span class="badge">
+          <a href="age-calculate/">Use Tool</a>
+        </span>
+      </div>
+
+      <div class="tool-preview">
+        <h3>Merge PDF</h3>
+        <p>Merge multiple PDF files into a single PDF instantly.</p>
+        <span class="badge">
+          <a href="merge-pdf/">Use Tool</a>
+        </span>
+      </div>
+
+      <div class="tool-preview">
+        <h3>Remove Pages from PDF</h3>
+        <p>Remove selected pages from your PDF quickly and securely.</p>
+        <span class="badge">
+          <a href="remove-pages/">Use Tool</a>
+        </span>
+      </div>
+
+      <div class="tool-preview">
+        <h3>Crop PDF</h3>
+        <p>Crop your PDF pages easily and download instantly.</p>
+        <span class="badge">
+          <a href="crop-pdf/">Use Tool</a>
+        </span>
+      </div>
+    </div>
+
+  </div>
+  </section>
 
 <footer>
   Skill2Job Tools
