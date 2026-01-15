@@ -218,75 +218,6 @@
   font-weight: 500;
 }
 
-    .about {
-      max-width: 800px;
-      margin: auto;
-      padding: 40px 16px;
-    }
-
-    .about-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 24px;
-    }
-
-    .about-card h2 {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      color: var(--dark);
-    }
-
-    .about-text {
-      font-size: 15px;
-      text-align: justify;
-      line-height: 1.7;
-    }
-
-    .about-text a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-      border-bottom: 1px dashed transparent;
-      transition: all 0.2s ease;
-    }
-
-    .about-text a:hover {
-      border-bottom-color: var(--primary);
-      opacity: 0.9;
-    }
-
-      .pdf-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.pdf-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 10px 12px;
-  cursor: grab;
-}
-
-.pdf-item span.name {
-  font-size: 15px;
-  font-weight: 500;
-  color: var(--dark);
-}
-
-.pdf-item span.remove {
-  color: var(--primary);
-  font-weight: 600;
-  cursor: pointer;
-}
-
     @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 
@@ -305,62 +236,69 @@
   </div>
 </header>
 
-<div class="input-group">
-  <label>Upload PDF</label>
-  <input type="file" id="pdfInput" accept="application/pdf" multiple>
-</div>
+<section class="tool-section">
+  <div class="tool-card">
+    <h1>Merge PDF Files</h1>
 
-<div id="pdfPreview" class="pdf-preview" style="display:none;"></div>
+    <div class="input-group">
+      <label>Upload PDF</label>
+      <input type="file" id="pdfInput" accept="application/pdf">
+    </div>
 
-<button class="calculate-btn" id="addMore">Add More PDFs</button>
-<button class="calculate-btn" id="mergeBtn">Merge PDFs & Download</button>
+    <div class="pdf-list" id="pdfList" style="display:none"></div>
 
-<div class="loading" id="loading">
-  <div class="spinner"></div>
-</div>
+    <div class="add-more" id="addMore" style="display:none">
+      ➕ Add another PDF
+    </div>
 
-<div class="result" id="result"></div>
-</section>
+    <button class="calculate-btn" id="mergeBtn">
+      Merge PDFs & Download
+    </button>
 
-  <section class="about">
-  <div class="about-card">
-    <h2>About This Tool</h2>
-    <p class="about-text">
-      This Merge PDF tool allows you to combine multiple PDF files into a single
-      PDF document quickly and securely. The tool works entirely in your browser,
-      requires no registration, and does not store any of your files. Site
-      <a href="https://www.skill2job.site/" target="_blank" rel="noopener">
-        Skill2Job
-      </a>
-      is developed by <strong>Yadav Subba</strong> and offers free, fast, and reliable
-      online tools for students, job seekers, and professionals.
-    </p>
+    <div class="loading" id="loading">
+      <div class="spinner"></div>
+    </div>
+
+    <div class="result" id="result"></div>
   </div>
 </section>
 
 <section class="about">
   <div class="about-card">
-    <h2>More Tools</h2>
+    <h2>Other Useful Tools</h2>
 
     <div class="tools-grid">
       <div class="tool-preview">
-        <h3>BMI Calculator</h3>
-        <p>Check your body mass index easily.</p>
-        <span class="badge">Use Tool</span>
+        <h3>Age Calculator</h3>
+        <p>Calculate your exact age based on date of birth instantly.</p>
+        <span class="badge">
+          <a href="age-calculate/">Use Tool</a>
+        </span>
       </div>
 
       <div class="tool-preview">
-        <h3>Date Difference</h3>
-        <p>Find difference between two dates.</p>
-        <span class="badge">Use Tool</span>
+        <h3>PDF Crop</h3>
+        <p>Crop your PDF pages quickly and download easily.</p>
+        <span class="badge">
+          <a href="crop-pdf/">Use Tool</a>
+        </span>
       </div>
 
       <div class="tool-preview">
-        <h3>Percentage Calculator</h3>
-        <p>Calculate percentage instantly.</p>
-        <span class="badge">Use Tool</span>
+        <h3>Merge PDF</h3>
+        <p>Merge multiple PDF files into a single PDF instantly.</p>
+        <span class="badge">
+          <a href="merge-pdf.">Use Tool</a>
+        </span>
       </div>
-    </div>
+
+      <div class="tool-preview">
+        <h3>Remove Pages From PDF</h3>
+        <p>Find the difference between two dates in days, months, and years.</p>
+        <span class="badge">
+          <a href="remove-pages">Use Tool</a>
+        </span>
+      </div>
 
   </div>
 </section>
@@ -369,7 +307,7 @@
 
 <script>
 const pdfInput = document.getElementById("pdfInput");
-const pdfPreview = document.getElementById("pdfPreview");
+const pdfList = document.getElementById("pdfList");
 const addMore = document.getElementById("addMore");
 const mergeBtn = document.getElementById("mergeBtn");
 const loading = document.getElementById("loading");
@@ -377,79 +315,44 @@ const result = document.getElementById("result");
 
 let pdfFiles = [];
 
-// Render PDF preview list
-function renderPreview() {
-  pdfPreview.innerHTML = "";
-  pdfFiles.forEach((f, i) => {
-    const div = document.createElement("div");
-    div.className = "pdf-item";
-    div.setAttribute("draggable", "true");
-    div.dataset.index = i;
-
-    const nameSpan = document.createElement("span");
-    nameSpan.className = "name";
-    nameSpan.textContent = f.name;
-
-    const removeSpan = document.createElement("span");
-    removeSpan.className = "remove";
-    removeSpan.textContent = "✕";
-    removeSpan.addEventListener("click", () => {
-      pdfFiles.splice(i, 1);
-      renderPreview();
-    });
-
-    div.appendChild(nameSpan);
-    div.appendChild(removeSpan);
-    pdfPreview.appendChild(div);
-
-    // Drag & Drop functionality
-    div.addEventListener("dragstart", e => {
-      e.dataTransfer.setData("text/plain", i);
-    });
-
-    div.addEventListener("dragover", e => e.preventDefault());
-
-    div.addEventListener("drop", e => {
-      e.preventDefault();
-      const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
-      const toIndex = i;
-      if (fromIndex !== toIndex) {
-        const movedItem = pdfFiles.splice(fromIndex, 1)[0];
-        pdfFiles.splice(toIndex, 0, movedItem);
-        renderPreview();
-      }
-    });
-  });
-
-  pdfPreview.style.display = pdfFiles.length ? "block" : "none";
-}
-
-// Upload PDFs
+// Handle file upload
 pdfInput.addEventListener("change", async e => {
   if (!e.target.files.length) return;
 
   loading.style.display = "block";
   result.style.display = "none";
 
-  for (const file of e.target.files) {
-    const bytes = await file.arrayBuffer();
-    pdfFiles.push({ name: file.name, bytes });
-  }
+  const file = e.target.files[0];
+  const bytes = await file.arrayBuffer();
+  pdfFiles.push({ name: file.name, bytes });
 
   // Simulate upload delay based on file size
-  const totalSize = Array.from(e.target.files).reduce((acc, f) => acc + f.size, 0);
-  const uploadTime = Math.min(Math.max(totalSize / 500000, 600), 1500); // 0.6s to 1.5s
-
+  const uploadTime = Math.min(Math.max(file.size / 500000, 500), 1200); // 0.5s to 1.2s approx
   setTimeout(() => {
     loading.style.display = "none";
-    renderPreview();
+    renderList();
   }, uploadTime);
 });
 
 // Add more PDFs
-addMore.addEventListener("click", () => pdfInput.click());
+addMore.addEventListener("click", () => {
+  pdfInput.click();
+});
 
-// Merge PDFs
+// Render uploaded PDF list
+function renderList() {
+  pdfList.innerHTML = "";
+  pdfFiles.forEach((f, i) => {
+    const div = document.createElement("div");
+    div.className = "pdf-item";
+    div.textContent = `${i + 1}. ${f.name}`;
+    pdfList.appendChild(div);
+  });
+  pdfList.style.display = "block";
+  addMore.style.display = "block";
+}
+
+// Merge PDFs with rolling animation
 mergeBtn.addEventListener("click", async () => {
   result.style.display = "none";
 
@@ -467,8 +370,9 @@ mergeBtn.addEventListener("click", async () => {
     const mergedPdf = await PDFLib.PDFDocument.create();
 
     // Simulate processing time based on total PDF size
-    const totalBytes = pdfFiles.reduce((acc, f) => acc + f.bytes.byteLength, 0);
-    const processingTime = Math.min(Math.max(totalBytes / 1000000, 1000), 4000); // 1s to 4s
+    let totalBytes = pdfFiles.reduce((acc, f) => acc + f.bytes.byteLength, 0);
+    const processingTime = Math.min(Math.max(totalBytes / 1000000, 800), 3000); // 0.8s to 3s approx
+
     await new Promise(resolve => setTimeout(resolve, processingTime));
 
     for (const f of pdfFiles) {
