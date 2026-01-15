@@ -257,6 +257,36 @@
       opacity: 0.9;
     }
 
+      .pdf-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.pdf-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  cursor: grab;
+}
+
+.pdf-item span.name {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.pdf-item span.remove {
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
     @keyframes spin{to{transform:rotate(360deg)}}
   </style>
 
@@ -275,31 +305,21 @@
   </div>
 </header>
 
-<section class="tool-section">
-  <div class="tool-card">
-    <h1>Merge PDF Files</h1>
+<div class="input-group">
+  <label>Upload PDF</label>
+  <input type="file" id="pdfInput" accept="application/pdf" multiple>
+</div>
 
-    <div class="input-group">
-      <label>Upload PDF</label>
-      <input type="file" id="pdfInput" accept="application/pdf">
-    </div>
+<div id="pdfPreview" class="pdf-preview" style="display:none;"></div>
 
-    <div class="pdf-list" id="pdfList" style="display:none"></div>
+<button class="calculate-btn" id="addMore">Add More PDFs</button>
+<button class="calculate-btn" id="mergeBtn">Merge PDFs & Download</button>
 
-    <div class="add-more" id="addMore" style="display:none">
-      ➕ Add another PDF
-    </div>
+<div class="loading" id="loading">
+  <div class="spinner"></div>
+</div>
 
-    <button class="calculate-btn" id="mergeBtn">
-      Merge PDFs & Download
-    </button>
-
-    <div class="loading" id="loading">
-      <div class="spinner"></div>
-    </div>
-
-    <div class="result" id="result"></div>
-  </div>
+<div class="result" id="result"></div>
 </section>
 
   <section class="about">
@@ -349,7 +369,7 @@
 
 <script>
 const pdfInput = document.getElementById("pdfInput");
-const pdfList = document.getElementById("pdfList");
+const pdfPreview = document.getElementById("pdfPreview");
 const addMore = document.getElementById("addMore");
 const mergeBtn = document.getElementById("mergeBtn");
 const loading = document.getElementById("loading");
@@ -357,68 +377,115 @@ const result = document.getElementById("result");
 
 let pdfFiles = [];
 
+// Render PDF preview list
+function renderPreview() {
+  pdfPreview.innerHTML = "";
+  pdfFiles.forEach((f, i) => {
+    const div = document.createElement("div");
+    div.className = "pdf-item";
+    div.setAttribute("draggable", "true");
+    div.dataset.index = i;
+
+    const nameSpan = document.createElement("span");
+    nameSpan.className = "name";
+    nameSpan.textContent = f.name;
+
+    const removeSpan = document.createElement("span");
+    removeSpan.className = "remove";
+    removeSpan.textContent = "✕";
+    removeSpan.addEventListener("click", () => {
+      pdfFiles.splice(i, 1);
+      renderPreview();
+    });
+
+    div.appendChild(nameSpan);
+    div.appendChild(removeSpan);
+    pdfPreview.appendChild(div);
+
+    // Drag & Drop functionality
+    div.addEventListener("dragstart", e => {
+      e.dataTransfer.setData("text/plain", i);
+    });
+
+    div.addEventListener("dragover", e => e.preventDefault());
+
+    div.addEventListener("drop", e => {
+      e.preventDefault();
+      const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
+      const toIndex = i;
+      if (fromIndex !== toIndex) {
+        const movedItem = pdfFiles.splice(fromIndex, 1)[0];
+        pdfFiles.splice(toIndex, 0, movedItem);
+        renderPreview();
+      }
+    });
+  });
+
+  pdfPreview.style.display = pdfFiles.length ? "block" : "none";
+}
+
+// Upload PDFs
 pdfInput.addEventListener("change", async e => {
-  if(!e.target.files.length) return;
+  if (!e.target.files.length) return;
 
   loading.style.display = "block";
   result.style.display = "none";
 
-  const file = e.target.files[0];
-  const bytes = await file.arrayBuffer();
-  pdfFiles.push({ name:file.name, bytes });
+  for (const file of e.target.files) {
+    const bytes = await file.arrayBuffer();
+    pdfFiles.push({ name: file.name, bytes });
+  }
 
-  setTimeout(()=>{
+  // Simulate upload delay based on file size
+  const totalSize = Array.from(e.target.files).reduce((acc, f) => acc + f.size, 0);
+  const uploadTime = Math.min(Math.max(totalSize / 500000, 600), 1500); // 0.6s to 1.5s
+
+  setTimeout(() => {
     loading.style.display = "none";
-    renderList();
-  }, 600);
+    renderPreview();
+  }, uploadTime);
 });
 
-addMore.addEventListener("click",()=>{
-  pdfInput.click();
-});
+// Add more PDFs
+addMore.addEventListener("click", () => pdfInput.click());
 
-function renderList(){
-  pdfList.innerHTML = "";
-  pdfFiles.forEach((f,i)=>{
-    const div = document.createElement("div");
-    div.className = "pdf-item";
-    div.textContent = `${i+1}. ${f.name}`;
-    pdfList.appendChild(div);
-  });
-  pdfList.style.display = "block";
-  addMore.style.display = "block";
-}
-
-mergeBtn.addEventListener("click", async ()=>{
+// Merge PDFs
+mergeBtn.addEventListener("click", async () => {
   result.style.display = "none";
 
-  if(pdfFiles.length < 2){
+  if (pdfFiles.length < 2) {
     result.textContent = "Please upload at least two PDFs to merge.";
     result.style.display = "block";
-    result.scrollIntoView({behavior:"smooth",block:"center"});
+    result.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
 
   loading.style.display = "block";
   mergeBtn.disabled = true;
 
-  try{
+  try {
     const mergedPdf = await PDFLib.PDFDocument.create();
 
-    for(const f of pdfFiles){
+    // Simulate processing time based on total PDF size
+    const totalBytes = pdfFiles.reduce((acc, f) => acc + f.bytes.byteLength, 0);
+    const processingTime = Math.min(Math.max(totalBytes / 1000000, 1000), 4000); // 1s to 4s
+    await new Promise(resolve => setTimeout(resolve, processingTime));
+
+    for (const f of pdfFiles) {
       const pdf = await PDFLib.PDFDocument.load(f.bytes);
       const pages = await mergedPdf.copyPages(pdf, pdf.getPageIndices());
-      pages.forEach(p=>mergedPdf.addPage(p));
+      pages.forEach(p => mergedPdf.addPage(p));
     }
 
     const bytes = await mergedPdf.save();
-    const blob = new Blob([bytes],{type:"application/pdf"});
+    const blob = new Blob([bytes], { type: "application/pdf" });
     const url = URL.createObjectURL(blob);
 
     result.innerHTML = `<a href="${url}" download="merged.pdf">Download Merged PDF</a>`;
     result.style.display = "block";
-    result.scrollIntoView({behavior:"smooth",block:"center"});
-  }catch{
+    result.scrollIntoView({ behavior: "smooth", block: "center" });
+  } catch (e) {
+    console.error(e);
     result.textContent = "Error merging PDFs. Please try again.";
     result.style.display = "block";
   }
@@ -427,11 +494,12 @@ mergeBtn.addEventListener("click", async ()=>{
   mergeBtn.disabled = false;
 });
 
-document.getElementById("shareBtn").addEventListener("click",()=>{
-  if(navigator.share){
+// Share button
+document.getElementById("shareBtn").addEventListener("click", () => {
+  if (navigator.share) {
     navigator.share({
-      title:"Merge PDF Files – Skill2Job",
-      url:location.href
+      title: "Merge PDF Files – Skill2Job",
+      url: location.href
     });
   }
 });
