@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- BASIC SEO -->
+  <meta charset="UTF-8">
+  <title>Crop PDF Online – Skill2Job</title>
+  <meta name="description" content="Crop PDF online on Skill2Job. Upload your PDF, set crop margins, preview and download instantly. Fully client-side.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- FONT -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --dark: #1e293b;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --card: #ffffff;
+      --text: #334155;
+      --font-base: 16px;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Poppins', sans-serif; font-size: var(--font-base); line-height: 1.6; background: var(--bg); color: var(--text); }
+
+    header {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top:0; z-index:1000;
+    }
+    .header-container {
+      max-width: 1100px; margin:auto;
+      padding:14px 16px; display:flex; justify-content:space-between; align-items:center;
+    }
+    .logo img { height:36px; display:block; }
+    .share-btn { background:var(--primary); color:#fff; border:none; padding:8px 14px; border-radius:6px; font-size:15px; cursor:pointer; }
+
+    .tool-section { padding:40px 16px; }
+    .tool-card {
+      max-width: 800px; margin:auto;
+      background: var(--card); border-radius: 10px;
+      padding: 24px; box-shadow:0 8px 22px rgba(0,0,0,0.05);
+    }
+    .tool-card h1 { text-align:center; font-size:22px; font-weight:600; margin-bottom:20px; color: var(--dark); }
+    .input-group { margin-bottom:16px; }
+    .input-group label { display:block; margin-bottom:6px; font-size:16px; font-weight:500; }
+    .input-group input { width:100%; padding:10px; font-size:16px; border-radius:6px; border:1px solid var(--border); }
+
+    .calculate-btn {
+      width:100%; padding:12px; font-size:16px; background:var(--primary);
+      color:#fff; border:none; border-radius:6px; cursor:pointer; font-weight:500;
+    }
+    .calculate-btn:disabled { opacity:0.6; cursor:not-allowed; }
+
+    .loading { display:none; margin-top:20px; text-align:center; }
+    .spinner { width:36px; height:36px; border:4px solid #dbeafe; border-top:4px solid var(--primary); border-radius:50%; margin:auto; animation: spin 0.8s linear infinite; }
+
+    .result { display:none; margin-top:20px; padding:14px; background:#eff6ff; border-left:4px solid var(--primary); border-radius:6px; font-size:16px; text-align:center; word-break: break-word; }
+
+    .about { max-width:800px; margin:auto; padding:40px 16px; }
+    .about-card { background: var(--card); border:1px solid var(--border); border-radius:10px; padding:24px; }
+    .about-card h2 { font-size:18px; font-weight:600; margin-bottom:10px; color: var(--dark); }
+    .about-text { font-size:15px; text-align:justify; line-height:1.7; }
+    .about-text a { color:var(--primary); text-decoration:none; font-weight:500; border-bottom:1px dashed transparent; transition: all 0.2s ease; }
+    .about-text a:hover { border-bottom-color: var(--primary); opacity:0.9; }
+
+    footer { background: var(--dark); color:#cbd5f5; text-align:center; padding:14px; font-size:14px; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    /* PDF preview */
+    #pdfPreview { margin-top: 16px; width:100%; height:400px; border:1px solid var(--border); border-radius:6px; }
+  </style>
+
+  <!-- PDF-LIB -->
+  <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+</head>
+
+<body>
+<header>
+  <div class="header-container">
+    <div class="logo"><img src="https://i.postimg.cc/YCnzSpLg/Official_Logo.webp" alt="Skill2Job Logo"></div>
+    <button class="share-btn" id="shareBtn">Share</button>
+  </div>
+</header>
+
+<section class="tool-section">
+  <div class="tool-card">
+    <h1>Crop PDF Online</h1>
+    <p class="about-text">
+      Upload your PDF, preview it, set crop margins in pixels manually and download the cropped PDF instantly. This works fully in your browser.
+    </p>
+
+    <div class="input-group">
+      <label for="pdfFile">Upload PDF</label>
+      <input type="file" id="pdfFile" accept="application/pdf">
+    </div>
+
+    <canvas id="pdfPreview"></canvas>
+
+    <div class="input-group">
+      <label>Top Margin (px)</label>
+      <input type="number" id="top" value="0">
+    </div>
+    <div class="input-group">
+      <label>Bottom Margin (px)</label>
+      <input type="number" id="bottom" value="0">
+    </div>
+    <div class="input-group">
+      <label>Left Margin (px)</label>
+      <input type="number" id="left" value="0">
+    </div>
+    <div class="input-group">
+      <label>Right Margin (px)</label>
+      <input type="number" id="right" value="0">
+    </div>
+
+    <button class="calculate-btn" id="cropBtn">Crop & Download PDF</button>
+
+    <div class="loading" id="loading"><div class="spinner"></div></div>
+    <div class="result" id="result"></div>
+  </div>
+</section>
+
+<footer>Skill2Job Tools</footer>
+
+<script>
+const pdfFile = document.getElementById('pdfFile');
+const preview = document.getElementById('pdfPreview');
+const cropBtn = document.getElementById('cropBtn');
+const result = document.getElementById('result');
+const loading = document.getElementById('loading');
+
+let currentPdfArray = null;
+
+// Preview PDF
+pdfFile.addEventListener('change', async (e)=>{
+  if(!e.target.files.length) return;
+  const file = e.target.files[0];
+  currentPdfArray = await file.arrayBuffer();
+
+  const pdfDoc = await PDFLib.PDFDocument.load(currentPdfArray);
+  const pages = pdfDoc.getPages();
+  const firstPage = pages[0];
+  const viewportWidth = preview.width = preview.clientWidth;
+  const viewportHeight = preview.height = preview.clientHeight;
+  const ctx = preview.getContext('2d');
+  ctx.clearRect(0,0,viewportWidth,viewportHeight);
+
+  ctx.fillStyle="#f3f4f6";
+  ctx.fillRect(0,0,viewportWidth,viewportHeight);
+
+  ctx.fillStyle="#2563eb";
+  ctx.font = "16px Poppins";
+  ctx.fillText("PDF Loaded: "+file.name, 10, 20);
+  ctx.fillText("Preview shows first page only.",10,40);
+});
+
+// Crop PDF
+cropBtn.addEventListener('click', async ()=>{
+  if(!currentPdfArray){
+    alert("Please upload a PDF first.");
+    return;
+  }
+
+  cropBtn.disabled = true;
+  loading.style.display = "block";
+  result.style.display = "none";
+
+  const top = Number(document.getElementById('top').value)||0;
+  const bottom = Number(document.getElementById('bottom').value)||0;
+  const left = Number(document.getElementById('left').value)||0;
+  const right = Number(document.getElementById('right').value)||0;
+
+  try{
+    const pdfDoc = await PDFLib.PDFDocument.load(currentPdfArray);
+    pdfDoc.getPages().forEach(page=>{
+      const { width, height } = page.getSize();
+      page.setCropBox(left,bottom,width-left-right,height-top-bottom);
+    });
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], {type:'application/pdf'});
+    const url = URL.createObjectURL(blob);
+
+    result.innerHTML = `<a href="${url}" download="cropped.pdf">Download Cropped PDF</a>`;
+    result.style.display="block";
+  }catch(e){
+    result.textContent = "Error cropping PDF. Try again.";
+    result.style.display="block";
+  }
+
+  loading.style.display="none";
+  cropBtn.disabled = false;
+});
+
+// Share
+document.getElementById('shareBtn').addEventListener('click', ()=>{
+  if(navigator.share){
+    navigator.share({title:"Crop PDF Online – Skill2Job", url:location.href});
+  }
+});
+</script>
+
+</body>
+    </html>
