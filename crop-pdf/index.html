@@ -126,6 +126,7 @@
 <footer>Skill2Job Tools</footer>
 
 <script>
+  // DOM elements
 const pdfFile = document.getElementById('pdfFile');
 const preview = document.getElementById('pdfPreview');
 const cropBtn = document.getElementById('cropBtn');
@@ -134,71 +135,88 @@ const loading = document.getElementById('loading');
 
 let currentPdfArray = null;
 
-// Preview PDF
-pdfFile.addEventListener('change', async (e)=>{
-  if(!e.target.files.length) return;
+// PDF Preview - shows first page info
+pdfFile.addEventListener('change', async (e) => {
+  result.style.display = 'none'; // hide previous messages
+  if (!e.target.files.length) return;
+
   const file = e.target.files[0];
+  if (file.type !== 'application/pdf') {
+    result.style.display = 'block';
+    result.textContent = 'Please upload a valid PDF file.';
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
   currentPdfArray = await file.arrayBuffer();
 
-  const pdfDoc = await PDFLib.PDFDocument.load(currentPdfArray);
-  const pages = pdfDoc.getPages();
-  const firstPage = pages[0];
-  const viewportWidth = preview.width = preview.clientWidth;
-  const viewportHeight = preview.height = preview.clientHeight;
+  // Simple canvas preview placeholder
   const ctx = preview.getContext('2d');
-  ctx.clearRect(0,0,viewportWidth,viewportHeight);
+  const width = preview.width = preview.clientWidth;
+  const height = preview.height = preview.clientHeight;
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = "#f3f4f6";
+  ctx.fillRect(0, 0, width, height);
 
-  ctx.fillStyle="#f3f4f6";
-  ctx.fillRect(0,0,viewportWidth,viewportHeight);
-
-  ctx.fillStyle="#2563eb";
+  ctx.fillStyle = "#2563eb";
   ctx.font = "16px Poppins";
-  ctx.fillText("PDF Loaded: "+file.name, 10, 20);
-  ctx.fillText("Preview shows first page only.",10,40);
+  ctx.fillText(`PDF Loaded: ${file.name}`, 10, 20);
+  ctx.fillText("Preview shows first page only.", 10, 40);
 });
 
-// Crop PDF
-cropBtn.addEventListener('click', async ()=>{
-  if(!currentPdfArray){
-    alert("Please upload a PDF first.");
+// Crop & Download PDF
+cropBtn.addEventListener('click', async () => {
+  result.style.display = 'none';
+  loading.style.display = 'none';
+
+  if (!currentPdfArray) {
+    // Smooth inline error like Age Calculator
+    result.style.display = 'block';
+    result.textContent = 'Please upload your PDF first.';
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
 
   cropBtn.disabled = true;
-  loading.style.display = "block";
-  result.style.display = "none";
+  loading.style.display = 'block';
 
-  const top = Number(document.getElementById('top').value)||0;
-  const bottom = Number(document.getElementById('bottom').value)||0;
-  const left = Number(document.getElementById('left').value)||0;
-  const right = Number(document.getElementById('right').value)||0;
+  const top = Number(document.getElementById('top').value) || 0;
+  const bottom = Number(document.getElementById('bottom').value) || 0;
+  const left = Number(document.getElementById('left').value) || 0;
+  const right = Number(document.getElementById('right').value) || 0;
 
-  try{
+  try {
     const pdfDoc = await PDFLib.PDFDocument.load(currentPdfArray);
-    pdfDoc.getPages().forEach(page=>{
+    pdfDoc.getPages().forEach(page => {
       const { width, height } = page.getSize();
-      page.setCropBox(left,bottom,width-left-right,height-top-bottom);
+      page.setCropBox(left, bottom, width - left - right, height - top - bottom);
     });
 
     const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], {type:'application/pdf'});
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
     const url = URL.createObjectURL(blob);
 
     result.innerHTML = `<a href="${url}" download="cropped.pdf">Download Cropped PDF</a>`;
-    result.style.display="block";
-  }catch(e){
-    result.textContent = "Error cropping PDF. Try again.";
-    result.style.display="block";
+    result.style.display = 'block';
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  } catch (e) {
+    result.textContent = 'Error cropping PDF. Please try again.';
+    result.style.display = 'block';
+    result.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
 
-  loading.style.display="none";
+  loading.style.display = 'none';
   cropBtn.disabled = false;
 });
 
-// Share
-document.getElementById('shareBtn').addEventListener('click', ()=>{
-  if(navigator.share){
-    navigator.share({title:"Crop PDF Online – Skill2Job", url:location.href});
+// Share button (optional)
+document.getElementById('shareBtn').addEventListener('click', () => {
+  if (navigator.share) {
+    navigator.share({
+      title: "Crop PDF Online – Skill2Job",
+      url: location.href
+    });
   }
 });
 </script>
